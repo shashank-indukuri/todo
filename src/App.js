@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import UserCard from './components/User/UserCard';
+import TodoList from './components/Todo/TodoList';
+import CreateTodo from './components/Todo/CreateTodo';
+
+/**
+ * This Component is the main container for our todo app
+ */
 
 function App() {
+  const initialTodo = [];
+  const [user, setUser] = useState('');
+  const [todos, setTodos] = useState(initialTodo);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <UserCard user={user} setUser={setUser} setTodos={setTodos} />
+      <TodoList todos={todos} setTodos={setTodos} />
+      <br />
+      <hr />
+      {user && <CreateTodo todos={todos} setTodos={setTodos} />}
     </div>
   );
 }
