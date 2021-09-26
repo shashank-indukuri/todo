@@ -35,4 +35,4 @@ This is a simple React based To-Do app currently in the initial stage without us
 
 - If the checkbox is set to true, the date completed is automatically mapped to the object.
 
--Finally, hitting Logout clears the state and allows another user to login.
+- Finally, hitting Logout clears the state and allows another user to login.
