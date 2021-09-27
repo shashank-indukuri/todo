@@ -30,6 +30,8 @@ function CreateTodo({ todos, setTodos }) {
       complete: false,
       dateCompleted: null,
     };
+    setTitle('');
+    setDescription('');
     setTodos([...todos, newTodo]);
   };
 
@@ -46,7 +48,7 @@ function CreateTodo({ todos, setTodos }) {
         />
       </div>
       <br />
-      <textarea value={description} onChange={handleDescription} placeholder="description" />
+      <textarea value={description} onChange={handleDescription} placeholder="Description" />
       <br />
       <input type="submit" value="Create" disabled={title.length === 0} />
     </form>
