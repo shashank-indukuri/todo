@@ -35,4 +35,6 @@ This is a simple React based To-Do app currently in the initial stage without us
 
 - If the checkbox is set to true, the date completed is automatically mapped to the object.
 
+- A user has the option of removing a specific todo item from the exisitng list.
+
 - Finally, hitting Logout clears the state and allows another user to login.
