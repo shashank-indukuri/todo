@@ -3,11 +3,10 @@ import nextId from 'react-id-generator';
 
 /**
  * This Component helps to create a new todo and adds to the exisiting list
- * @param todos contains the todo list of the login user
- * @param setTools used to update the todo list
+ * @param dispatch CREATE_TODO to create a new todo
  */
 
-function CreateTodo({ todos, setTodos }) {
+function CreateTodo({ dispatch }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -32,7 +31,7 @@ function CreateTodo({ todos, setTodos }) {
     };
     setTitle('');
     setDescription('');
-    setTodos([...todos, newTodo]);
+    dispatch({ type: 'CREATE_TODO', newTodo });
   };
 
   return (

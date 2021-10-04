@@ -3,10 +3,10 @@ import '../../style.css';
 
 /**
  * This Component implements the login functionality
- * @param setUser Funciton used to set the state of user
+ * @param dispatch is a reducer function of type LOGIN used to set the state of user
  */
 
-function Login({ setUser }) {
+function Login({ dispatch }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -22,7 +22,7 @@ function Login({ setUser }) {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setUser(username);
+        dispatch({ type: 'LOGIN', username });
       }}
     >
       <label htmlFor="login">Username:</label>

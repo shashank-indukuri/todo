@@ -7,15 +7,15 @@ import Register from './Register';
  * This Component is the container for the user authentication functionality
  */
 
-function UserCard({ user, setUser, setTodos }) {
+function UserCard({ user, dispatch }) {
   if (user) {
-    return <Logout user={user} setUser={setUser} setTodos={setTodos} />;
+    return <Logout user={user} dispatch={dispatch} />;
   }
   return (
     <div>
-      <Login setUser={setUser} />
+      <Login dispatch={dispatch} />
       <br />
-      <Register setUser={setUser} />
+      <Register dispatch={dispatch} />
     </div>
   );
 }

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import UserCard from './components/User/UserCard';
 import TodoList from './components/Todo/TodoList';
 import CreateTodo from './components/Todo/CreateTodo';
+import appReducer from './store/reducers';
 
 /**
  * This Component is the main container for our todo app
@@ -9,15 +10,24 @@ import CreateTodo from './components/Todo/CreateTodo';
 
 function App() {
   const initialTodo = [];
-  const [user, setUser] = useState('');
-  const [todos, setTodos] = useState(initialTodo);
+  const [state, dispatch] = useReducer(appReducer, { user: '', todos: initialTodo });
+  const { user, todos } = state;
+
+  useEffect(() => {
+    if (user) {
+      document.title = `${user}’s To-Do`;
+    } else {
+      document.title = 'To-Do';
+    }
+  }, [user]);
+
   return (
     <div>
-      <UserCard user={user} setUser={setUser} setTodos={setTodos} />
-      <TodoList todos={todos} setTodos={setTodos} />
+      <UserCard user={user} dispatch={dispatch} />
+      <TodoList todos={todos} dispatch={dispatch} />
       <br />
       <hr />
-      {user && <CreateTodo todos={todos} setTodos={setTodos} />}
+      {user && <CreateTodo dispatch={dispatch} />}
     </div>
   );
 }

@@ -3,10 +3,10 @@ import '../../style.css';
 
 /**
  * This Component implements the new account creation funcitonality
- * @param setUser Used to set the state of the user
+ * @param dispatch REGISTER used to set the state of the user
  */
 
-function Register({ setUser }) {
+function Register({ dispatch }) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -29,7 +29,7 @@ function Register({ setUser }) {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setUser(formData.username);
+        dispatch({ type: 'REGISTER', username: formData.username });
       }}
     >
       <label htmlFor="register-username">Username:</label>
@@ -64,11 +64,7 @@ function Register({ setUser }) {
         className="tab"
         type="submit"
         value="Register"
-        disabled={
-          formData.username.length === 0 ||
-          formData.password.length < 8 ||
-          formData.password !== formData.confirmPassword
-        }
+        disabled={formData.username.length === 0 || formData.password !== formData.confirmPassword}
       />
     </form>
   );

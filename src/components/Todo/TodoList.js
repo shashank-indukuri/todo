@@ -6,20 +6,13 @@ import Todo from './Todo';
  * @param todos holds the todo list, by default empty
  */
 
-function TodoList({ todos = [], setTodos }) {
-  const handleTodo = (todo) => {
-    const prevTodos = todos.filter((t) => t.id !== todo.id);
-    const updatedTodos = [...prevTodos, todo];
-    updatedTodos.sort((a, b) => (a.id < b.id ? 1 : -1));
-    setTodos(updatedTodos);
-  };
-
+function TodoList({ todos, dispatch }) {
   return (
     <div>
       {todos
         .sort((a, b) => (a.id < b.id ? 1 : -1))
         .map((todo) => (
-          <Todo key={todo.id} {...todo} handleTodo={handleTodo} />
+          <Todo key={todo.id} {...todo} dispatch={dispatch} />
         ))}
     </div>
   );

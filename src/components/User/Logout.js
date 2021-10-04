@@ -4,17 +4,16 @@ import '../../style.css';
 /**
  * This Component is used to logout the exisitng user and empty the todos list
  * @param user  Holds the current login user
- * @param setUser Used to clear the state of user
- * @param setTodos Used to clear the state of todos
+ * @param dispatch LOGOUT, CLEAR_TODOS used to  logout, clear the state of user and existing todos
  */
 
-function Logout({ user, setUser, setTodos }) {
+function Logout({ user, dispatch }) {
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setUser('');
-        setTodos([]);
+        dispatch({ type: 'LOGOUT' });
+        dispatch({ type: 'CLEAR_TODOS' });
       }}
     >
       Logged in as: <b>{user}</b>
