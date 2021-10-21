@@ -1,40 +1,43 @@
-## TO-Do Website
+<h2 align="center">
+  To-Do Website<br/>
+  <a href="https://portfolio-53108.web.app/" target="_blank">Shashank Indukuri | To-Do</a>
+</h2>
 
-### A React based todo application created using create-react-app
+<br/>
 
-## Installation and Setup Instructions
+<center>
 
-#### Example:  
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) &nbsp;
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com) &nbsp;
 
-Clone down this repository. You will need `node` and `npm` installed globally on your machine.  
+</center>
 
-Installation:
+## Built With
 
-`npm install`  
+To-DO which features authentication, create, update and deletion of Todos.<br/>
 
-To Start Server:
+This project was built using these technologies.
 
-`npm start`  
+- React.js
+- Node.js
+- Context state management
+- VsCode
 
-To Visit App:
+## Getting Started
 
-`localhost:3000/`  
+Clone down this repository. You will need `node.js` and `git` installed globally on your machine.
 
-## Summary
+## 🛠 Installation and Setup Instructions
 
-This is a simple React based To-Do app currently in the initial stage without using Bootstrap
+1. Installation: `npm install`
 
-## Features
-- Using their username and password, users may login or register (authentication is not yet implemented).
+2. In the project directory, you can run: `npm start`
 
-- After successfully logging in, a user can create a todo using the form located beneath the logout bar.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The page will reload if you make edits.
 
-- Using React hooks, state is maintained around the components and the generated todo is rendered dynamically.
+## Usage Instructions
 
-- The user may change the checkbox for each todo in order to indicate it as done.
-
-- If the checkbox is set to true, the date completed is automatically mapped to the object.
-
-- A user has the option of removing a specific todo item from the exisitng list.
-
-- Finally, hitting Logout clears the state and allows another user to login.
+Open the project folder and Navigate to `/src/components/`. <br/>
+You will find all the components used and you can edit your information accordingly.
