@@ -1,14 +1,42 @@
-import React, { useState } from 'react';
-import nextId from 'react-id-generator';
+import React, { useState, useContext, useEffect } from 'react';
+import { useResource } from 'react-request-hook';
+import StateContext from '../../store/Contexts';
 
 /**
  * This Component helps to create a new todo and adds to the exisiting list
- * @param dispatch CREATE_TODO to create a new todo
  */
 
-function CreateTodo({ dispatch }) {
+function CreateTodo() {
+  const { dispatch } = useContext(StateContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
+  const [todo, createTodo] = useResource(
+    // eslint-disable-next-line no-shadow
+    ({ title, description, dateCreated, complete, dateCompleted }) => ({
+      url: '/todos',
+      method: 'post',
+      data: { title, description, dateCreated, complete, dateCompleted },
+    })
+  );
+
+  useEffect(() => {
+    if (todo && todo.data) {
+      const newTodo = {
+        id: todo.data.id,
+        title: todo.data.title,
+        description: todo.data.description,
+        dateCreated: todo.data.dateCreated,
+        complete: todo.data.complete,
+        dateCompleted: todo.data.dateCompleted,
+      };
+      delete todo.data;
+      dispatch({
+        type: 'CREATE_TODO',
+        newTodo,
+      });
+    }
+  }, [todo]);
 
   const handleTitle = (evt) => {
     setTitle(evt.target.value);
@@ -18,24 +46,25 @@ function CreateTodo({ dispatch }) {
     setDescription(evt.target.value);
   };
 
-  const handleCreate = (evt) => {
-    evt.preventDefault();
-    // creating a new todo object and maintaing a unique id for each one
-    const newTodo = {
-      id: nextId(),
+  const handleCreate = () => {
+    createTodo({
       title,
       description,
       dateCreated: Date.now(),
       complete: false,
       dateCompleted: null,
-    };
+    });
     setTitle('');
     setDescription('');
-    dispatch({ type: 'CREATE_TODO', newTodo });
   };
 
   return (
-    <form onSubmit={handleCreate}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleCreate();
+      }}
+    >
       <div>
         <label htmlFor="create-title">Title:</label>
         <input

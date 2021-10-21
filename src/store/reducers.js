@@ -16,18 +16,29 @@ function userReducer(state, action) {
 
 function todoReducer(state, action) {
   switch (action.type) {
-    case 'CREATE_TODO':
-      return [action.newTodo, ...state];
+    case 'CREATE_TODO': {
+      const filterTodo = state.filter((t) => t.id === action.newTodo.id);
+      if (filterTodo.length === 0) {
+        return [action.newTodo, ...state];
+      }
+      return state;
+    }
     case 'TOGGLE_TODO': {
-      const prevTodos = state.filter((t) => t.id !== action.updatedTodo.id);
-      return [...prevTodos, action.updatedTodo];
+      return state.map((todo) => {
+        const temp = todo;
+        if (todo.id === action.id) {
+          temp.complete = action.complete;
+          temp.dateCompleted = action.dateCompleted;
+        }
+        return temp;
+      });
     }
     case 'DELETE_TODO': {
       const afterDeleteTodos = state.filter((t) => t.id !== action.id);
       return [...afterDeleteTodos];
     }
-    case 'CLEAR_TODOS':
-      return [];
+    case 'FETCH_TODOS':
+      return action.todos;
     default:
       return state;
   }

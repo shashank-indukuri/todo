@@ -1,18 +1,49 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useResource } from 'react-request-hook';
+import StateContext from '../../store/Contexts';
 
 /**
- * This Component is responsible for displaying each tood
+ * This Component is responsible for displaying each todo
  * @param {todo} todo contains all the fields of todo
- * @param dispatch TOGGLE_TODO and DELETE_TODO to alter the complete field and delete the todo
  */
 
-function Todo({ id, title, description, dateCreated, complete, dateCompleted, dispatch }) {
+function Todo({ id, title, description, dateCreated, complete, dateCompleted }) {
+  const { dispatch } = useContext(StateContext);
   // formatter for the date
   const dateFormat = new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
   });
+
+  const [todo, deleteTodo] = useResource(() => ({
+    url: `/todos/${id}`,
+    method: 'delete',
+  }));
+
+  // eslint-disable-next-line no-shadow
+  const [updateTodo, toggleTodo] = useResource(({ complete, dateCompleted }) => ({
+    url: `/todos/${id}`,
+    method: 'patch',
+    data: { complete, dateCompleted },
+  }));
+
+  useEffect(() => {
+    if (todo && todo.data !== undefined) {
+      dispatch({ type: 'DELETE_TODO', id });
+    }
+  }, [todo]);
+
+  useEffect(() => {
+    if (updateTodo && updateTodo.data) {
+      dispatch({
+        type: 'TOGGLE_TODO',
+        id: updateTodo.data.id,
+        complete: updateTodo.data.complete,
+        dateCompleted: updateTodo.data.dateCompleted,
+      });
+    }
+  }, [updateTodo]);
 
   /**
    * This function calls back the parent funciton inorder to update the current todo
@@ -25,19 +56,11 @@ function Todo({ id, title, description, dateCreated, complete, dateCompleted, di
     } else {
       tempDate = null;
     }
-    const updatedTodo = {
-      id,
-      title,
-      description,
-      dateCreated,
-      complete: evt.target.checked,
-      dateCompleted: tempDate,
-    };
-    dispatch({ type: 'TOGGLE_TODO', updatedTodo });
+    toggleTodo({ complete: evt.target.checked, dateCompleted: tempDate });
   };
 
   const handleDelete = () => {
-    dispatch({ type: 'DELETE_TODO', id });
+    deleteTodo();
   };
 
   return (

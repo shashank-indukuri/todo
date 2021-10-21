@@ -1,8 +1,10 @@
 import React, { useReducer, useEffect } from 'react';
+import { useResource } from 'react-request-hook';
 import UserCard from './components/User/UserCard';
 import TodoList from './components/Todo/TodoList';
 import CreateTodo from './components/Todo/CreateTodo';
 import appReducer from './store/reducers';
+import StateContext from './store/Contexts';
 
 /**
  * This Component is the main container for our todo app
@@ -11,7 +13,19 @@ import appReducer from './store/reducers';
 function App() {
   const initialTodo = [];
   const [state, dispatch] = useReducer(appReducer, { user: '', todos: initialTodo });
-  const { user, todos } = state;
+  const { user } = state;
+  const [todos, getTodos] = useResource(() => ({
+    url: '/todos',
+    method: 'get',
+  }));
+
+  useEffect(getTodos, []);
+
+  useEffect(() => {
+    if (todos && todos.data) {
+      dispatch({ type: 'FETCH_TODOS', todos: todos.data.reverse() });
+    }
+  }, [todos]);
 
   useEffect(() => {
     if (user) {
@@ -23,11 +37,14 @@ function App() {
 
   return (
     <div>
-      <UserCard user={user} dispatch={dispatch} />
-      <TodoList todos={todos} dispatch={dispatch} />
-      <br />
-      <hr />
-      {user && <CreateTodo dispatch={dispatch} />}
+      <StateContext.Provider value={{ state, dispatch }}>
+        <UserCard />
+        <br />
+        {user && <CreateTodo />}
+        <TodoList />
+        <br />
+        <hr />
+      </StateContext.Provider>
     </div>
   );
 }

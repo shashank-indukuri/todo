@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Todo from './Todo';
+import StateContext from '../../store/Contexts';
 
 /**
  * This Component loops the todo list and return its child component for each Todo
- * @param todos holds the todo list, by default empty
  */
 
-function TodoList({ todos, dispatch }) {
+function TodoList() {
+  const { state } = useContext(StateContext);
+  const { todos } = state;
   return (
     <div>
-      {todos
-        .sort((a, b) => (a.id < b.id ? 1 : -1))
-        .map((todo) => (
-          <Todo key={todo.id} {...todo} dispatch={dispatch} />
-        ))}
+      {todos.map((todo) => (
+        <Todo key={todo.id} {...todo} />
+      ))}
     </div>
   );
 }

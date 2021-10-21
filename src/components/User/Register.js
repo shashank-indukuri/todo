@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { useResource } from 'react-request-hook';
 import '../../style.css';
+import StateContext from '../../store/Contexts';
 
 /**
  * This Component implements the new account creation funcitonality
- * @param dispatch REGISTER used to set the state of the user
  */
 
-function Register({ dispatch }) {
+function Register() {
+  const { dispatch } = useContext(StateContext);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -25,11 +27,23 @@ function Register({ dispatch }) {
     setFormData({ ...formData, confirmPassword: evt.target.value });
   };
 
+  const [user, register] = useResource((username, password) => ({
+    url: '/users',
+    method: 'post',
+    data: { username, password },
+  }));
+
+  useEffect(() => {
+    if (user && user.data) {
+      dispatch({ type: 'REGISTER', username: user.data.username });
+    }
+  }, [user]);
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        dispatch({ type: 'REGISTER', username: formData.username });
+        register(formData.username, formData.password);
       }}
     >
       <label htmlFor="register-username">Username:</label>

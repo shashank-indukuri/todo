@@ -1,0 +1,25 @@
+{
+  "todos": [],
+  "users": [
+    {
+      "id": 1,
+      "username": "testuser",
+      "password": "badpassword"
+    },
+    {
+      "username": "Shashank",
+      "password": "badpassword",
+      "id": 2
+    },
+    {
+      "username": "Shashank",
+      "password": "123",
+      "id": 3
+    },
+    {
+      "username": "Shashank",
+      "password": "asd",
+      "id": 4
+    }
+  ]
+}

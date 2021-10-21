@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Login from './Login';
 import Logout from './Logout';
 import Register from './Register';
+import StateContext from '../../store/Contexts';
 
 /**
  * This Component is the container for the user authentication functionality
  */
 
-function UserCard({ user, dispatch }) {
-  if (user) {
-    return <Logout user={user} dispatch={dispatch} />;
+function UserCard() {
+  const { state } = useContext(StateContext);
+  if (state.user) {
+    return <Logout />;
   }
   return (
     <div>
-      <Login dispatch={dispatch} />
       <br />
-      <Register dispatch={dispatch} />
+      <Login />
+      <br />
+      <Register />
     </div>
   );
 }
