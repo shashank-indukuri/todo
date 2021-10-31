@@ -22,6 +22,7 @@ This project was built using these technologies.
 - Node.js
 - Context state management
 - VsCode
+- Bootstrap
 
 ## Getting Started
 
