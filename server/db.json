@@ -1,5 +1,14 @@
 {
-  "todos": [],
+  "todos": [
+    {
+      "title": "Shashank",
+      "description": "Testing",
+      "dateCreated": 1637119435457,
+      "complete": false,
+      "dateCompleted": null,
+      "id": 1
+    }
+  ],
   "users": [
     {
       "id": 1,

@@ -15,6 +15,8 @@ function Register() {
     confirmPassword: '',
   });
 
+  const [status, setStatus] = useState('');
+
   const handleUsername = (evt) => {
     setFormData({ ...formData, username: evt.target.value });
   };
@@ -27,15 +29,28 @@ function Register() {
     setFormData({ ...formData, confirmPassword: evt.target.value });
   };
 
-  const [user, register] = useResource((username, password) => ({
-    url: '/users',
+  const [user, register] = useResource((username, password, confirmPassword) => ({
+    url: '/auth/register',
     method: 'post',
-    data: { username, password },
+    data: { username, password, passwordConfirmation: confirmPassword },
   }));
 
   useEffect(() => {
     if (user && user.data) {
-      dispatch({ type: 'REGISTER', username: user.data.username });
+      dispatch({ type: 'REGISTER', id: user.data.id, username: user.data.username });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && user.isLoading === false && (user.data || user.error)) {
+      if (user.error) {
+        setStatus('Registration failed, please try again later.');
+        alert('Registration failed, please try again later.');
+      } else {
+        setStatus('Registration successful. You may now login.');
+        alert('Registration successful. You may now login.');
+      }
+      console.log(status);
     }
   }, [user]);
 
@@ -43,7 +58,7 @@ function Register() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        register(formData.username, formData.password);
+        register(formData.username, formData.password, formData.confirmPassword);
       }}
     >
       <label htmlFor="register-username">Username:</label>

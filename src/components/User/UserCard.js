@@ -10,7 +10,7 @@ import StateContext from '../../store/Contexts';
 
 function UserCard() {
   const { state } = useContext(StateContext);
-  if (state.user) {
+  if (state.user.username) {
     return <Logout />;
   }
   return (

@@ -7,7 +7,8 @@ import StateContext from '../../store/Contexts';
  */
 
 function CreateTodo() {
-  const { dispatch } = useContext(StateContext);
+  const { state, dispatch } = useContext(StateContext);
+  const { user } = state;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -16,12 +17,13 @@ function CreateTodo() {
     ({ title, description, dateCreated, complete, dateCompleted }) => ({
       url: '/todos',
       method: 'post',
+      headers: { Authorization: `${user.access_token}` },
       data: { title, description, dateCreated, complete, dateCompleted },
     })
   );
 
   useEffect(() => {
-    if (todo && todo.data) {
+    if (todo && todo.data && todo.isLoading === false) {
       const newTodo = {
         id: todo.data.id,
         title: todo.data.title,
@@ -30,7 +32,6 @@ function CreateTodo() {
         complete: todo.data.complete,
         dateCompleted: todo.data.dateCompleted,
       };
-      delete todo.data;
       dispatch({
         type: 'CREATE_TODO',
         newTodo,

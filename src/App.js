@@ -12,24 +12,29 @@ import StateContext from './store/Contexts';
 
 function App() {
   const initialTodo = [];
-  const [state, dispatch] = useReducer(appReducer, { user: '', todos: initialTodo });
+  const [state, dispatch] = useReducer(appReducer, { user: {}, todos: initialTodo });
   const { user } = state;
   const [todos, getTodos] = useResource(() => ({
-    url: '/todos',
+    url: `/users/${user.id}`,
     method: 'get',
+    headers: { Authorization: `${user.access_token}` },
   }));
 
-  useEffect(getTodos, []);
+  useEffect(() => {
+    if (user.id) {
+      getTodos();
+    }
+  }, [user.access_token]);
 
   useEffect(() => {
     if (todos && todos.data) {
-      dispatch({ type: 'FETCH_TODOS', todos: todos.data.reverse() });
+      dispatch({ type: 'FETCH_TODOS', todos: todos.data.todos });
     }
   }, [todos]);
 
   useEffect(() => {
     if (user) {
-      document.title = `${user}’s To-Do`;
+      document.title = `${user.username}’s To-Do`;
     } else {
       document.title = 'To-Do';
     }
@@ -40,7 +45,7 @@ function App() {
       <StateContext.Provider value={{ state, dispatch }}>
         <UserCard />
         <br />
-        {user && <CreateTodo />}
+        {user.username && <CreateTodo />}
         <TodoList />
         <br />
         <hr />

@@ -7,8 +7,9 @@ import StateContext from '../../store/Contexts';
  * @param {todo} todo contains all the fields of todo
  */
 
-function Todo({ id, title, description, dateCreated, complete, dateCompleted }) {
-  const { dispatch } = useContext(StateContext);
+function Todo({ id, title, description, dateCreated, complete, dateCompleted, author }) {
+  const { state, dispatch } = useContext(StateContext);
+  const { user } = state;
   // formatter for the date
   const dateFormat = new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
@@ -16,32 +17,43 @@ function Todo({ id, title, description, dateCreated, complete, dateCompleted }) 
     day: '2-digit',
   });
 
-  const [todo, deleteTodo] = useResource(() => ({
-    url: `/todos/${id}`,
+  const [todo, deleteTodo] = useResource((todoId) => ({
+    url: '/todos',
     method: 'delete',
+    data: { id: todoId, author },
+    headers: { Authorization: `${user.access_token}` },
   }));
 
   // eslint-disable-next-line no-shadow
   const [updateTodo, toggleTodo] = useResource(({ complete, dateCompleted }) => ({
-    url: `/todos/${id}`,
+    url: '/todos',
     method: 'patch',
-    data: { complete, dateCompleted },
+    data: { id, complete, dateCompleted, author },
+    headers: { Authorization: `${user.access_token}` },
   }));
 
   useEffect(() => {
-    if (todo && todo.data !== undefined) {
-      dispatch({ type: 'DELETE_TODO', id });
+    if (todo && (todo.data || todo.error) && todo.isLoading === false) {
+      if (todo.error) {
+        alert('Unauthorized, Please login');
+      } else {
+        dispatch({ type: 'DELETE_TODO', id: todo.data.id });
+      }
     }
   }, [todo]);
 
   useEffect(() => {
-    if (updateTodo && updateTodo.data) {
-      dispatch({
-        type: 'TOGGLE_TODO',
-        id: updateTodo.data.id,
-        complete: updateTodo.data.complete,
-        dateCompleted: updateTodo.data.dateCompleted,
-      });
+    if (updateTodo && (updateTodo.data || updateTodo.error) && updateTodo.isLoading === false) {
+      if (updateTodo.error) {
+        alert('Unauthorized, Please login');
+      } else {
+        dispatch({
+          type: 'TOGGLE_TODO',
+          complete: updateTodo.data.complete,
+          dateCompleted: updateTodo.data.dateCompleted,
+          id,
+        });
+      }
     }
   }, [updateTodo]);
 
@@ -60,7 +72,7 @@ function Todo({ id, title, description, dateCreated, complete, dateCompleted }) 
   };
 
   const handleDelete = () => {
-    deleteTodo();
+    deleteTodo(id);
   };
 
   return (
