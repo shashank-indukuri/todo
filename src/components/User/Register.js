@@ -39,7 +39,12 @@ function Register({ show, handleClose }) {
 
   useEffect(() => {
     if (user && user.data) {
-      dispatch({ type: 'REGISTER', id: user.data.id, username: user.data.username });
+      dispatch({
+        type: 'REGISTER',
+        id: user.data.id,
+        username: user.data.username,
+        access_token: user.data.access_token,
+      });
     }
   }, [user]);
 

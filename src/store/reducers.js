@@ -61,10 +61,31 @@ function todoReducer(state, action) {
   }
 }
 
+function todoListsReducer(state, action) {
+  switch (action.type) {
+    case 'CREATE_TODOLIST': {
+      const filterTodoList = state.filter((t) => t.id === action.newTodoList.id);
+      if (filterTodoList.length === 0) {
+        return [action.newTodoList, ...state];
+      }
+      return state;
+    }
+    case 'DELETE_TODOLIST': {
+      const afterDeleteTodoList = state.filter((t) => t.id !== action.id);
+      return [...afterDeleteTodoList];
+    }
+    case 'FETCH_TODOLISTS':
+      return action.todoLists;
+    default:
+      return state;
+  }
+}
+
 export default function appReducer(state, action) {
   return {
     user: userReducer(state.user, action),
     todos: todoReducer(state.todos, action),
     users: usersReducer(state.users, action),
+    todoLists: todoListsReducer(state.todoLists, action),
   };
 }

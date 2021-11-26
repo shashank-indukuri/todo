@@ -11,6 +11,8 @@ import CreateTodo from './components/Todo/CreateTodo';
 import TodoPage from './pages/TodoPage';
 import UserPage from './pages/UserPage';
 import ProfilePage from './pages/ProfilePage';
+import TodoListPage from './pages/TodoListPage';
+import CreateTodoList from './components/TodoList/CreateTodoList';
 
 /**
  * This Component is the main container for our todo app
@@ -18,15 +20,26 @@ import ProfilePage from './pages/ProfilePage';
 
 function App() {
   const initialTodo = [];
-  const [state, dispatch] = useReducer(appReducer, { user: {}, todos: initialTodo, users: [] });
+  const [state, dispatch] = useReducer(appReducer, {
+    user: {},
+    todos: initialTodo,
+    users: [],
+    todoLists: [],
+  });
   const { user } = state;
 
   const routes = mount({
     '/': route({ view: <HomePage /> }),
     '/users': route({ view: <UserPage /> }),
     '/users/:userId': route((req) => ({ view: <ProfilePage id={req.params.userId} /> })),
-    '/todo/create': route({ view: <CreateTodo /> }),
+    '/todoList/:todoListId/todo/create': route((req) => ({
+      view: <CreateTodo todoListId={req.params.todoListId} />,
+    })),
     '/todo/:id': route((req) => ({ view: <TodoPage id={req.params.id} /> })),
+    '/todoLists/:todoListId': route((req) => ({
+      view: <TodoListPage id={req.params.todoListId} />,
+    })),
+    '/todoLists/create': route({ view: <CreateTodoList /> }),
   });
 
   useEffect(() => {

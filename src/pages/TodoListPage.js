@@ -1,40 +1,44 @@
 import React, { useEffect, useContext } from 'react';
 import { useResource } from 'react-request-hook';
 import { Spinner } from 'react-bootstrap';
+import { Link } from 'react-navi';
 import StateContext from '../store/Contexts';
-import TodoLists from '../components/TodoList/TodoLists';
+import TodoList from '../components/Todo/TodoList';
 
-export default function HomePage() {
+export default function TodoListPage({ id }) {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;
+  const navigateTo = `/todoList/${id}/todo/create`;
 
-  const [todoLists, getTodoLists] = useResource(() => ({
-    url: 'todoLists',
+  const [todos, getTodos] = useResource(() => ({
+    url: `/todoLists/${id}`,
     method: 'get',
     headers: { Authorization: `${user.access_token}` },
   }));
 
   useEffect(() => {
     if (user.id) {
-      getTodoLists();
+      getTodos();
     }
   }, [user.access_token]);
 
   useEffect(() => {
-    if (todoLists && todoLists.data) {
-      dispatch({ type: 'FETCH_TODOLISTS', todoLists: todoLists.data.todoLists });
+    if (todos && todos.data) {
+      dispatch({ type: 'FETCH_TODOS', todos: todos.data.todos });
     }
-  }, [todoLists]);
-  const { isLoading } = todoLists;
+  }, [todos]);
+
+  const { isLoading } = todos;
 
   return (
     <>
       {isLoading && (
         <Spinner animation="border" role="status">
-          <span className="todoListsvisually-hidden">TodoLists Loading...</span>
+          <span className="visually-hidden">Todos Loading...</span>
         </Spinner>
       )}
-      <TodoLists />
+      <TodoList />
+      {user.username && <Link href={navigateTo}>Create New Todo</Link>}
     </>
   );
 }

@@ -25,7 +25,7 @@ export default function HeaderBar() {
             </Nav.Link>
             {user.username && (
               <Nav.Link>
-                <Link href="/todo/create">Create New Todo</Link>
+                <Link href="/todoLists/create">Create New TodoList</Link>
               </Nav.Link>
             )}
           </Nav>

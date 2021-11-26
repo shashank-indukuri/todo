@@ -3,54 +3,38 @@ import { useNavigation } from 'react-navi';
 import { useResource } from 'react-request-hook';
 import StateContext from '../../store/Contexts';
 
-/**
- * This Component helps to create a new todo and adds to the exisiting list
- */
-
-function CreateTodo({ todoListId }) {
+function CreateTodoList() {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const navigation = useNavigation();
 
-  const [todo, createTodo] = useResource(
+  const [todoList, createTodoList] = useResource(
     // eslint-disable-next-line no-shadow
-    ({ title, description, dateCreated, complete, dateCompleted }) => ({
-      url: '/todos',
+    ({ title, description }) => ({
+      url: '/todoLists',
       method: 'post',
       headers: { Authorization: `${user.access_token}` },
-      data: {
-        title,
-        description,
-        dateCreated,
-        complete,
-        dateCompleted,
-        author: user.id,
-        todoList: todoListId,
-      },
+      data: { title, description, author: user.id },
     })
   );
 
   useEffect(() => {
-    if (todo && todo.data && todo.isLoading === false) {
+    if (todoList && todoList.data && todoList.isLoading === false) {
       const newTodo = {
-        id: todo.data.id,
-        title: todo.data.title,
-        description: todo.data.description,
-        dateCreated: todo.data.dateCreated,
-        complete: todo.data.complete,
-        dateCompleted: todo.data.dateCompleted,
-        author: todo.data.author,
-        todoList: todo.data.todoList,
+        id: todoList.data.id,
+        title: todoList.data.title,
+        description: todoList.data.description,
+        author: todoList.data.author,
       };
       dispatch({
         type: 'CREATE_TODO',
         newTodo,
       });
-      navigation.navigate(`/todo/${todo.data.id}`);
+      navigation.navigate(`/todoLists/${todoList.data.id}`);
     }
-  }, [todo]);
+  }, [todoList]);
 
   const handleTitle = (evt) => {
     setTitle(evt.target.value);
@@ -61,12 +45,9 @@ function CreateTodo({ todoListId }) {
   };
 
   const handleCreate = () => {
-    createTodo({
+    createTodoList({
       title,
       description,
-      dateCreated: Date.now(),
-      complete: false,
-      dateCompleted: null,
     });
     setTitle('');
     setDescription('');
@@ -97,4 +78,4 @@ function CreateTodo({ todoListId }) {
   );
 }
 
-export default CreateTodo;
+export default CreateTodoList;

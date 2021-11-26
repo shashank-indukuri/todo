@@ -12,6 +12,7 @@ function TodoList() {
   const short = true;
   return (
     <div>
+      {todos.length === 0 && <i>No todos to display. Create a new one...</i>}
       {todos.map((todo) => (
         <Todo key={todo.id} {...todo} short={short} />
       ))}

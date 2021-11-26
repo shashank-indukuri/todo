@@ -14,8 +14,6 @@ function Login({ show, handleClose }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginFailed, setLoginFailed] = useState(false);
-  // const [alert, setAlert] = useState(false);
-  // const [variant, setVariant] = useState('success');
 
   const handleUsername = (evt) => {
     setUsername(evt.target.value);

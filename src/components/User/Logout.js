@@ -3,10 +3,6 @@ import { useNavigation } from 'react-navi';
 import '../../style.css';
 import StateContext from '../../store/Contexts';
 
-/**
- * This Component is used to logout the exisitng user and empty the todos list
- */
-
 function Logout() {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;

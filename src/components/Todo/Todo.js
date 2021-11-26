@@ -106,7 +106,7 @@ function Todo({
         <Card.Text>{processedContent}</Card.Text>
         <input type="checkbox" checked={complete} onChange={handleChecked} />
         <Button variant="link" onClick={handleDelete}>
-          Delete Post
+          Delete Todo
         </Button>
         <Card.Text>Created on: {dateFormat.format(dateCreated)}</Card.Text>
         {dateCompleted && <i>Completed on: {dateFormat.format(dateCompleted)}</i>}
