@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useNavigation } from 'react-navi';
 import { useResource } from 'react-request-hook';
 import StateContext from '../../store/Contexts';
 
@@ -11,6 +12,7 @@ function CreateTodo() {
   const { user } = state;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const navigation = useNavigation();
 
   const [todo, createTodo] = useResource(
     // eslint-disable-next-line no-shadow
@@ -18,7 +20,7 @@ function CreateTodo() {
       url: '/todos',
       method: 'post',
       headers: { Authorization: `${user.access_token}` },
-      data: { title, description, dateCreated, complete, dateCompleted },
+      data: { title, description, dateCreated, complete, dateCompleted, author: user.id },
     })
   );
 
@@ -31,11 +33,13 @@ function CreateTodo() {
         dateCreated: todo.data.dateCreated,
         complete: todo.data.complete,
         dateCompleted: todo.data.dateCompleted,
+        author: todo.data.author,
       };
       dispatch({
         type: 'CREATE_TODO',
         newTodo,
       });
+      navigation.navigate(`/todo/${todo.data.id}`);
     }
   }, [todo]);
 

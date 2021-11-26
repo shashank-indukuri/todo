@@ -1,10 +1,16 @@
 import React, { useReducer, useEffect } from 'react';
-import { useResource } from 'react-request-hook';
-import UserCard from './components/User/UserCard';
-import TodoList from './components/Todo/TodoList';
-import CreateTodo from './components/Todo/CreateTodo';
+import { mount, route } from 'navi';
+import { Router, View } from 'react-navi';
+
+import { Container } from 'react-bootstrap';
 import appReducer from './store/reducers';
 import StateContext from './store/Contexts';
+import HeaderBar from './pages/HeaderBar';
+import HomePage from './pages/HomePage';
+import CreateTodo from './components/Todo/CreateTodo';
+import TodoPage from './pages/TodoPage';
+import UserPage from './pages/UserPage';
+import ProfilePage from './pages/ProfilePage';
 
 /**
  * This Component is the main container for our todo app
@@ -12,28 +18,19 @@ import StateContext from './store/Contexts';
 
 function App() {
   const initialTodo = [];
-  const [state, dispatch] = useReducer(appReducer, { user: {}, todos: initialTodo });
+  const [state, dispatch] = useReducer(appReducer, { user: {}, todos: initialTodo, users: [] });
   const { user } = state;
-  const [todos, getTodos] = useResource(() => ({
-    url: `/users/${user.id}`,
-    method: 'get',
-    headers: { Authorization: `${user.access_token}` },
-  }));
+
+  const routes = mount({
+    '/': route({ view: <HomePage /> }),
+    '/users': route({ view: <UserPage /> }),
+    '/users/:userId': route((req) => ({ view: <ProfilePage id={req.params.userId} /> })),
+    '/todo/create': route({ view: <CreateTodo /> }),
+    '/todo/:id': route((req) => ({ view: <TodoPage id={req.params.id} /> })),
+  });
 
   useEffect(() => {
-    if (user.id) {
-      getTodos();
-    }
-  }, [user.access_token]);
-
-  useEffect(() => {
-    if (todos && todos.data) {
-      dispatch({ type: 'FETCH_TODOS', todos: todos.data.todos });
-    }
-  }, [todos]);
-
-  useEffect(() => {
-    if (user) {
+    if (user.username) {
       document.title = `${user.username}’s To-Do`;
     } else {
       document.title = 'To-Do';
@@ -43,12 +40,13 @@ function App() {
   return (
     <div>
       <StateContext.Provider value={{ state, dispatch }}>
-        <UserCard />
-        <br />
-        {user.username && <CreateTodo />}
-        <TodoList />
-        <br />
-        <hr />
+        <Router routes={routes}>
+          <Container>
+            <HeaderBar />
+            <hr />
+            <View />
+          </Container>
+        </Router>
       </StateContext.Provider>
     </div>
   );

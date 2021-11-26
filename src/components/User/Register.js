@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useResource } from 'react-request-hook';
+import { Form, Modal, Button } from 'react-bootstrap';
 import '../../style.css';
 import StateContext from '../../store/Contexts';
 
@@ -7,7 +8,7 @@ import StateContext from '../../store/Contexts';
  * This Component implements the new account creation funcitonality
  */
 
-function Register() {
+function Register({ show, handleClose }) {
   const { dispatch } = useContext(StateContext);
   const [formData, setFormData] = useState({
     username: '',
@@ -16,6 +17,7 @@ function Register() {
   });
 
   const [status, setStatus] = useState('');
+  const [registerFailed, setRegisterFailed] = useState(false);
 
   const handleUsername = (evt) => {
     setFormData({ ...formData, username: evt.target.value });
@@ -45,57 +47,70 @@ function Register() {
     if (user && user.isLoading === false && (user.data || user.error)) {
       if (user.error) {
         setStatus('Registration failed, please try again later.');
-        alert('Registration failed, please try again later.');
+        setRegisterFailed(true);
       } else {
-        setStatus('Registration successful. You may now login.');
-        alert('Registration successful. You may now login.');
+        setRegisterFailed(false);
+        handleClose();
       }
-      console.log(status);
     }
   }, [user]);
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        register(formData.username, formData.password, formData.confirmPassword);
-      }}
-    >
-      <label htmlFor="register-username">Username:</label>
-      <input
-        type="text"
-        value={formData.username}
-        onChange={handleUsername}
-        name="register-username"
-        id="register-username"
-      />
-      <label className="tab" htmlFor="register-password">
-        Password:
-      </label>
-      <input
-        type="password"
-        value={formData.password}
-        onChange={handlePassword}
-        name="register-password"
-        id="register-password"
-      />
-      <label className="tab" htmlFor="register-password-confirm">
-        Confirm password:
-      </label>
-      <input
-        type="password"
-        value={formData.confirmPassword}
-        onChange={handleConfirmPassword}
-        name="register-password-confirm"
-        id="register-password-confirm"
-      />
-      <input
-        className="tab"
-        type="submit"
-        value="Register"
-        disabled={formData.username.length === 0 || formData.password !== formData.confirmPassword}
-      />
-    </form>
+    <Modal show={show} onHide={handleClose}>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          register(formData.username, formData.password, formData.confirmPassword);
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Register</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Label htmlFor="register-username">Username:</Form.Label>
+          <Form.Control
+            type="text"
+            value={formData.username}
+            onChange={handleUsername}
+            name="register-username"
+            id="register-username"
+          />
+          <Form.Label htmlFor="register-password">Password:</Form.Label>
+          <Form.Control
+            type="password"
+            name="register-password"
+            id="register-password"
+            value={formData.password}
+            onChange={handlePassword}
+          />
+          <Form.Label htmlFor="register-password-repeat">Repeat password:</Form.Label>
+          <Form.Control
+            type="password"
+            name="register-password-repeat"
+            id="register-password-repeat"
+            value={formData.passwordRepeat}
+            onChange={handleConfirmPassword}
+          />
+          {registerFailed && <Form.Text style={{ color: 'red' }}>{status}</Form.Text>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={
+              formData.username.length === 0 ||
+              formData.password.length === 0 ||
+              formData.password !== formData.confirmPassword
+            }
+          >
+            Register
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
   );
 }
 

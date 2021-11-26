@@ -1,15 +1,22 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useResource } from 'react-request-hook';
+import { Card, Button } from 'react-bootstrap';
+import { Link } from 'react-navi';
 import StateContext from '../../store/Contexts';
 
-/**
- * This Component is responsible for displaying each todo
- * @param {todo} todo contains all the fields of todo
- */
-
-function Todo({ id, title, description, dateCreated, complete, dateCompleted, author }) {
+function Todo({
+  id,
+  title,
+  description,
+  dateCreated,
+  complete,
+  dateCompleted,
+  author,
+  short = false,
+}) {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;
+  const [updateFailed, setUpdateFailed] = useState(false);
   // formatter for the date
   const dateFormat = new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
@@ -35,8 +42,9 @@ function Todo({ id, title, description, dateCreated, complete, dateCompleted, au
   useEffect(() => {
     if (todo && (todo.data || todo.error) && todo.isLoading === false) {
       if (todo.error) {
-        alert('Unauthorized, Please login');
+        setUpdateFailed(true);
       } else {
+        setUpdateFailed(false);
         dispatch({ type: 'DELETE_TODO', id: todo.data.id });
       }
     }
@@ -45,8 +53,9 @@ function Todo({ id, title, description, dateCreated, complete, dateCompleted, au
   useEffect(() => {
     if (updateTodo && (updateTodo.data || updateTodo.error) && updateTodo.isLoading === false) {
       if (updateTodo.error) {
-        alert('Unauthorized, Please login');
+        setUpdateFailed(true);
       } else {
+        setUpdateFailed(false);
         dispatch({
           type: 'TOGGLE_TODO',
           complete: updateTodo.data.complete,
@@ -75,22 +84,38 @@ function Todo({ id, title, description, dateCreated, complete, dateCompleted, au
     deleteTodo(id);
   };
 
+  let processedContent = description;
+
+  if (short) {
+    if (description.length > 30) {
+      processedContent = `${description.substring(0, 30)} ...`;
+    }
+  }
+
   return (
-    <div>
-      <hr />
-      <span>
+    <Card>
+      <Card.Body>
+        <Card.Title>
+          <Link href={`/todo/${id}`}>{title}</Link>
+        </Card.Title>
+        <Card.Subtitle>
+          <i>
+            Written by <b>{user.username}</b>
+          </i>
+        </Card.Subtitle>
+        <Card.Text>{processedContent}</Card.Text>
         <input type="checkbox" checked={complete} onChange={handleChecked} />
-        <b>{title}</b>
-      </span>
-      <p>
-        <i>{description}</i>
-      </p>
-      <p>Date Created: {dateFormat.format(dateCreated)} </p>
-      {dateCompleted && <p>Date Completed: {dateFormat.format(dateCompleted)} </p>}
-      <button type="button" onClick={handleDelete}>
-        delete
-      </button>
-    </div>
+        <Button variant="link" onClick={handleDelete}>
+          Delete Post
+        </Button>
+        <Card.Text>Created on: {dateFormat.format(dateCreated)}</Card.Text>
+        {dateCompleted && <i>Completed on: {dateFormat.format(dateCompleted)}</i>}
+        {short && <Link href={`/todo/${id}`}>View full post</Link>}
+        {updateFailed && (
+          <Card.Text style={{ color: 'red' }}>Unauthorized, Please Login...</Card.Text>
+        )}
+      </Card.Body>
+    </Card>
   );
 }
 

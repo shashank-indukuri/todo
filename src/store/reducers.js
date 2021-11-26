@@ -22,6 +22,15 @@ function userReducer(state, action) {
   }
 }
 
+function usersReducer(state, action) {
+  switch (action.type) {
+    case 'FETCH_USERS':
+      return action.users;
+    default:
+      return state;
+  }
+}
+
 function todoReducer(state, action) {
   switch (action.type) {
     case 'CREATE_TODO': {
@@ -56,5 +65,6 @@ export default function appReducer(state, action) {
   return {
     user: userReducer(state.user, action),
     todos: todoReducer(state.todos, action),
+    users: usersReducer(state.users, action),
   };
 }
