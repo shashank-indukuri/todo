@@ -1,7 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import { mount, route } from 'navi';
 import { Router, View } from 'react-navi';
-
 import { Container } from 'react-bootstrap';
 import appReducer from './store/reducers';
 import StateContext from './store/Contexts';

@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-navi';
-
 import { Navbar, Nav, Container } from 'react-bootstrap';
-
 import UserBar from '../components/User/UserCard';
 import Header from '../components/Header';
 import StateContext from '../store/Contexts';
@@ -15,7 +13,7 @@ export default function HeaderBar() {
     <Navbar bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">
-          <Header text="My Blog" />
+          <Header text="To-Do" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

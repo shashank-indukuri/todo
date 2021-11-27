@@ -3,10 +3,6 @@ import { useNavigation } from 'react-navi';
 import { useResource } from 'react-request-hook';
 import StateContext from '../../store/Contexts';
 
-/**
- * This Component helps to create a new todo and adds to the exisiting list
- */
-
 function CreateTodo({ todoListId }) {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;

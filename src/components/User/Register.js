@@ -4,10 +4,6 @@ import { Form, Modal, Button } from 'react-bootstrap';
 import '../../style.css';
 import StateContext from '../../store/Contexts';
 
-/**
- * This Component implements the new account creation funcitonality
- */
-
 function Register({ show, handleClose }) {
   const { dispatch } = useContext(StateContext);
   const [formData, setFormData] = useState({

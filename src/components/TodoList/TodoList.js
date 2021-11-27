@@ -12,7 +12,7 @@ function TodoList({ id, title, description }) {
   const [todoList, deleteTodo] = useResource((todoListId) => ({
     url: '/todoLists',
     method: 'delete',
-    data: { id: todoListId },
+    data: { id: todoListId, author: user.id },
     headers: { Authorization: `${user.access_token}` },
   }));
 

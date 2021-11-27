@@ -13,6 +13,7 @@ function Todo({
   dateCompleted,
   author,
   short = false,
+  disable = false,
 }) {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;
@@ -105,11 +106,12 @@ function Todo({
         </Card.Subtitle>
         <Card.Text>{processedContent}</Card.Text>
         <input type="checkbox" checked={complete} onChange={handleChecked} />
-        <Button variant="link" onClick={handleDelete}>
+        <Button variant="link" disabled={disable} onClick={handleDelete}>
           Delete Todo
         </Button>
         <Card.Text>Created on: {dateFormat.format(dateCreated)}</Card.Text>
         {dateCompleted && <i>Completed on: {dateFormat.format(dateCompleted)}</i>}
+        <br />
         {short && <Link href={`/todo/${id}`}>View full post</Link>}
         {updateFailed && (
           <Card.Text style={{ color: 'red' }}>Unauthorized, Please Login...</Card.Text>

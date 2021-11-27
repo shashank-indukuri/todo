@@ -4,11 +4,6 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import '../../style.css';
 import StateContext from '../../store/Contexts';
 
-/**
- * This Component implements the login functionality
- * @param dispatch is a reducer function of type LOGIN used to set the state of user
- */
-
 function Login({ show, handleClose }) {
   const { dispatch } = useContext(StateContext);
   const [username, setUsername] = useState('');
@@ -33,11 +28,8 @@ function Login({ show, handleClose }) {
     if (user && user.isLoading === false && (user.data || user.error)) {
       if (user.error) {
         setLoginFailed(true);
-        // setAlert(true);
-        // setVariant('danger');
       } else {
         setLoginFailed(false);
-        // setVariant('success');
         dispatch({
           type: 'LOGIN',
           id: user.data.id,

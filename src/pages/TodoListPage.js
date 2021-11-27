@@ -37,8 +37,8 @@ export default function TodoListPage({ id }) {
           <span className="visually-hidden">Todos Loading...</span>
         </Spinner>
       )}
-      <TodoList />
       {user.username && <Link href={navigateTo}>Create New Todo</Link>}
+      <TodoList />
     </>
   );
 }

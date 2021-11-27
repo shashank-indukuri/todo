@@ -15,7 +15,7 @@ export default function ProfilePage({ id }) {
 
   useEffect(() => {
     if (todos && todos.isLoading === false && todos.data) {
-      dispatch({ type: 'FETCH_TODOS', todos: todos.data.todos }); // Within the tasks reducers I need a new action FETCH_TASK
+      dispatch({ type: 'FETCH_TODOS', todos: todos.data.todos });
     }
   }, [todos]);
 
